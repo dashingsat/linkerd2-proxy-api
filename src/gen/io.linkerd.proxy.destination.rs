@@ -159,6 +159,10 @@ pub struct DestinationProfile {
     /// there is no available budget.
     #[prost(message, optional, tag="2")]
     pub retry_budget: ::core::option::Option<RetryBudget>,
+    /// Configuration for rate limiting. If this is empty, requests should be
+    /// sent to the destination as normal.
+    #[prost(message, optional, tag="7")]
+    pub rate_limiter: ::core::option::Option<RateLimiter>,
     /// If this list is non-empty, requests to this destination should instead be
     /// split between the destinations in this list.  Each destination should
     /// receive a portion of the requests proportional to its weight.  If this
@@ -217,6 +221,16 @@ pub struct RetryBudget {
     /// window and therefore allows burstier retries.
     #[prost(message, optional, tag="3")]
     pub ttl: ::core::option::Option<::prost_types::Duration>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RateLimiter {
+    /// Determines the threshold number of requests after which the rate limiting
+    ///  kicks in.
+    #[prost(uint32, tag="1")]
+    pub threshold: u32,
+    /// Duration of the window in which the threshold kicks in.
+    #[prost(message, optional, tag="2")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResponseClass {

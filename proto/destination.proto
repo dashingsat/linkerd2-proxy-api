@@ -173,6 +173,10 @@ message DestinationProfile {
   // there is no available budget.
   RetryBudget retry_budget = 2;
 
+  // Configuration for rate limiting. If this is empty, requests should be
+  // sent to the destination as normal.
+  RateLimiter rate_limiter = 7;
+
   // If this list is non-empty, requests to this destination should instead be
   // split between the destinations in this list.  Each destination should
   // receive a portion of the requests proportional to its weight.  If this
@@ -222,6 +226,14 @@ message RetryBudget {
   // purposes of enforcing the retry_ratio.  A higher value considers a larger
   // window and therefore allows burstier retries.
   google.protobuf.Duration ttl = 3;
+}
+
+message RateLimiter {
+  // Determines the threshold number of requests after which the rate limiting
+  //  kicks in.
+  uint32 threshold = 1;
+  // Duration of the window in which the threshold kicks in.
+  google.protobuf.Duration duration = 2;
 }
 
 message ResponseClass {
