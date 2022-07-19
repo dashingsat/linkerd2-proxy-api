@@ -159,10 +159,6 @@ pub struct DestinationProfile {
     /// there is no available budget.
     #[prost(message, optional, tag="2")]
     pub retry_budget: ::core::option::Option<RetryBudget>,
-    /// Configuration for rate limiting. If this is empty, requests should be
-    /// sent to the destination as normal.
-    #[prost(message, optional, tag="7")]
-    pub rate_limiter: ::core::option::Option<RateLimiter>,
     /// If this list is non-empty, requests to this destination should instead be
     /// split between the destinations in this list.  Each destination should
     /// receive a portion of the requests proportional to its weight.  If this
@@ -201,6 +197,10 @@ pub struct Route {
     /// returned, and no more retries will be attempted.
     #[prost(message, optional, tag="5")]
     pub timeout: ::core::option::Option<::prost_types::Duration>,
+    /// Configuration for rate limiting. If this is empty, requests should be
+    /// sent to the destination as normal.
+    #[prost(message, optional, tag="6")]
+    pub rate_limiter: ::core::option::Option<RateLimiter>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetryBudget {
@@ -227,10 +227,13 @@ pub struct RateLimiter {
     /// Determines the threshold number of requests after which the rate limiting
     ///  kicks in.
     #[prost(uint32, tag="1")]
-    pub threshold: u32,
+    pub request_threshold_count: u32,
     /// Duration of the window in which the threshold kicks in.
     #[prost(message, optional, tag="2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
+    pub time_window: ::core::option::Option<::prost_types::Duration>,
+    ///Burst percentage allowed
+    #[prost(double, tag="3")]
+    pub burst_percentage: f64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResponseClass {
